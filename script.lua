@@ -169,7 +169,7 @@ local function play()
 			btn.Text = "Play"
 		else
 			local id = idbox.Text
-			local anim = Instance.new("anim")
+			local anim = Instance.new("Animation")
 			anim.id = id
 	
 			track = hum:LoadAnimation(anim)
