@@ -1,3 +1,4 @@
+
 --[[
 	FE Animation Player
 	by minishakk
@@ -211,3 +212,83 @@ local function notify()
 	})
 end
 coroutine.wrap(notify)()
+
+local ExpandBTN = Instance.new("TextButton")
+ExpandBTN.Name = "ExpandBTN"
+ExpandBTN.Parent = MainFrame
+ExpandBTN.AnchorPoint = Vector2.new(1, 1)
+ExpandBTN.Position = UDim2.new(1, -5, 1, -5)
+ExpandBTN.Size = UDim2.new(0, 30, 0, 30)
+ExpandBTN.BackgroundTransparency = 1
+ExpandBTN.Text = ">"
+ExpandBTN.Font = Enum.Font.SourceSansBold
+ExpandBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExpandBTN.TextScaled = true
+ExpandBTN.ZIndex = 99999999
+
+local SidePanel = Instance.new("Frame")
+SidePanel.Name = "SidePanel"
+SidePanel.Parent = TopFrame
+SidePanel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+SidePanel.BorderSizePixel = 0
+SidePanel.Position = UDim2.new(1, 0, 1.0000006, 0)
+SidePanel.Size = UDim2.new(0, 200, 0, 195)
+SidePanel.Visible = false
+SidePanel.ZIndex = 9999998
+
+local ScrollFrame = Instance.new("ScrollingFrame")
+ScrollFrame.Name = "ScrollFrame"
+ScrollFrame.Parent = SidePanel
+ScrollFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+ScrollFrame.BorderSizePixel = 0
+ScrollFrame.Position = UDim2.new(0, 0, 0, 0)
+ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+ScrollFrame.ScrollBarThickness = 6
+ScrollFrame.ZIndex = 9999999
+
+local InfoBox = Instance.new("TextBox")
+InfoBox.Name = "InfoBox"
+InfoBox.Parent = ScrollFrame
+InfoBox.BackgroundTransparency = 1
+InfoBox.Size = UDim2.new(1, -10, 0, 0)
+InfoBox.Position = UDim2.new(0, 5, 0, 5)
+InfoBox.TextWrapped = true
+InfoBox.TextYAlignment = Enum.TextYAlignment.Top
+InfoBox.TextXAlignment = Enum.TextXAlignment.Left
+InfoBox.Text = game:HttpGet('https://raw.githubusercontent.com/shakk-code/fe-animation-player/main/animations.txt')
+InfoBox.Font = Enum.Font.RobotoMono
+InfoBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfoBox.TextSize = 14
+InfoBox.ZIndex = 9999999
+InfoBox.ClearTextOnFocus = false
+InfoBox.MultiLine = true
+InfoBox.TextEditable = false
+
+ExpandBTN.MouseButton1Click:Connect(function()
+	if SidePanel.Visible then
+		SidePanel.Visible = false
+		ExpandBTN.Text = ">"
+	else
+		SidePanel.Visible = true
+		ExpandBTN.Text = "<"
+	end
+end)
+
+local function updateCanvas()
+	local textService = game:GetService("TextService")
+	local textSize = textService:GetTextSize(
+		InfoBox.Text,
+		InfoBox.TextSize,
+		InfoBox.Font,
+		Vector2.new(InfoBox.AbsoluteSize.X, math.huge)
+	)
+
+	InfoBox.Size = UDim2.new(1, -10, 0, textSize.Y)
+	ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, textSize.Y + 10)
+end
+
+InfoBox:GetPropertyChangedSignal("Text"):Connect(updateCanvas)
+InfoBox:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateCanvas)
+
+updateCanvas()
